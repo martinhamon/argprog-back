@@ -43,7 +43,7 @@ public class JwtAuthenticationController {
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
-System.out.println("aaaaaaaaaaaaaaaaaaaaaaa");
+
 		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
@@ -60,7 +60,7 @@ System.out.println("aaaaaaaaaaaaaaaaaaaaaaa");
 
 	private void authenticate(String username, String password) throws Exception {
 		try {
-                    System.out.println("bbbbbbbbbbbbbbbb");
+                    
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 		
                 } catch (DisabledException e) {

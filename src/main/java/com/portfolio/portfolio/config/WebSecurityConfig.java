@@ -19,6 +19,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -31,27 +32,30 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-
-	@Autowired
+      
 	private UserDetailsService jwtUserDetailsService;
 
 	@Autowired
 	private JwtRequestFilter jwtRequestFilter;
 
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		// configure AuthenticationManager so that it knows from where to load
-		// user for matching credentials
-		// Use BCryptPasswordEncoder
-		auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
-	}
+	
 
 	
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-
-	
+            @Bean
+            AccessDeniedHandler accessDeniedHandler(){
+                return new CustomAccessDeniedHandler();
+            }
+            
+	/*@Override
+       
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
+    }*/
+    
+    
 	@Override
         @Bean
 	public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -60,26 +64,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-            
-            httpSecurity
-                    .requiresChannel()
-                    .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
-                    .requiresSecure();
 		// We don't need CSRF for this example
-		 httpSecurity.cors().and().csrf().disable()
-                        
+		httpSecurity.cors().and().csrf().disable()
 				// dont authenticate this particular request
-				//.authorizeRequests().antMatchers("/login", "/register").permitAll().
+				.authorizeRequests().antMatchers("/login", "/register","/portfolio","/job/list","/education/list",
+                                "/project/list","/skill/list","/profile/get","/uploadFile").permitAll().
 				// all other requests need to be authenticated
-				//anyRequest().authenticated().and()
+				anyRequest().authenticated().and().
 				// make sure we use stateless session; session won't be used to
 				// store user's state.
-				.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                        ;
-                        
-                        
-                        
+				exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 		// Add a filter to validate the tokens with every request
 		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
@@ -96,4 +91,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+   
 }

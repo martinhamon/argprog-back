@@ -5,54 +5,75 @@
 package com.portfolio.portfolio.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import javax.persistence.Column;
+import java.io.Serializable;
+import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.UniqueConstraint;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  *
  * @author MH
  */
-@Getter 
+@Getter
 @Setter
 @Entity
-public class User {
+@Table(name = "users")
+public class User implements Serializable {
 
     /**
      * @return the token
      */
-   
     @Id
-    @GeneratedValue (strategy =GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-     @Column
+    @Column
     private String name;
-      @Column
+    @Column
     private String lastName;
-       @Column
+    @Column
     private String mail;
-    @Column(unique=true)
+    @Column(unique = true)
     private String username;
-     @Column
-     @JsonIgnore
+    @Column
+    @JsonIgnore
     private String password;
-      @Column
-      @JsonIgnore
+    @Column
+    @JsonIgnore
     private String token;
+    @Column
+    @JsonIgnore
+    private boolean active = false;
     
-    public User(){        
+     @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "users_rol", joinColumns = @JoinColumn(name = "users_id"), inverseJoinColumns = @JoinColumn(name = "rol_id"))
+    private Set<Rol> roles = new HashSet<>();
+
+  public Set<Rol> getRoles() {
+        return roles;
     }
-   public User(Long id, String name, String lastName, String mail, String userName, String token,String password) {
+
+    public void setRoles(Set<Rol> roles) {
+        this.roles = roles;
+    }
+      
+ 
+    public User() {
+       
+    }
+
+    public User(Long id, String name, String lastName, String mail, String userName, String token, String password) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;
         this.mail = mail;
         this.username = userName;
-        this.password=password;
+        this.password = password;
         this.token = token;
     }
 
@@ -125,7 +146,8 @@ public class User {
     public void setUserName(String userName) {
         this.username = userName;
     }
-     public String getToken() {
+
+    public String getToken() {
         return token;
     }
 
@@ -149,4 +171,24 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    /**
+     * @return the active
+     */
+    public boolean isActive() {
+        return active;
+    }
+
+    /**
+     * @param active the active to set
+     */
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+  
+
+   
+
+  
 }

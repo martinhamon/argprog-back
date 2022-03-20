@@ -19,29 +19,26 @@ import lombok.Setter;
 @Getter 
 @Setter
 @Entity
-public class Project {
-     @Id
+public class Skill {
+    
+    @Id
     @GeneratedValue (strategy =GenerationType.IDENTITY)
-      @Column (length = 512)
+    @Column (length = 512)
     private Long id;
     @Column   
     private String title;
-    @Column
-    private String subTitle;
-    @Column  ( columnDefinition="varchar(4096)")
-    private String description;    
-    @Column     ( columnDefinition="varchar(1024)")
-    private String url;
+    @Column   
+    private String subtitle;
+     @Column (length = 512)
+    private Long percent;
 
-    public Project() {
+    public Skill() {
     }
 
-    public Project(Long id, String title, String subTitle, String description, String url) {
+    public Skill(Long id, String title, Long percent) {
         this.id = id;
         this.title = title;
-        this.subTitle = subTitle;
-        this.description = description;
-        this.url = url;
+        this.percent = percent;
     }
 
     /**
@@ -73,45 +70,31 @@ public class Project {
     }
 
     /**
-     * @return the subTitle
+     * @return the percent
      */
-    public String getSubTitle() {
-        return subTitle;
+    public Long getPercent() {
+        return percent;
     }
 
     /**
-     * @param subTitle the subTitle to set
+     * @param percent the percent to set
      */
-    public void setSubTitle(String subTitle) {
-        this.subTitle = subTitle;
+    public void setPercent(Long percent) {
+        this.percent = percent;
     }
 
     /**
-     * @return the description
+     * @return the subtitle
      */
-    public String getDescription() {
-        return description;
+    public String getSubtitle() {
+        return subtitle;
     }
 
     /**
-     * @param description the description to set
+     * @param subtitle the subtitle to set
      */
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * @return the url
-     */
-    public String getUrl() {
-        return url;
-    }
-
-    /**
-     * @param url the url to set
-     */
-    public void setUrl(String url) {
-        this.url = url;
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
     }
     
 }

@@ -4,18 +4,13 @@
  */
 package com.portfolio.portfolio.repository;
 
-import com.portfolio.portfolio.model.User;
-import com.portfolio.portfolio.model.UserDto;
+import com.portfolio.portfolio.model.Skill;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author MH
  */
-@Repository
-public interface UserRepository extends JpaRepository<User, Long>{
-   
-    User findByUsername(String username);
-    
+public interface SkillRepository extends JpaRepository<Skill, Object> {
+    Skill findById(Long id);
 }

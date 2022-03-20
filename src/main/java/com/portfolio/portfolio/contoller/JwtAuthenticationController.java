@@ -9,9 +9,7 @@ import com.portfolio.portfolio.model.JwtRequest;
 import com.portfolio.portfolio.model.JwtResponse;
 import com.portfolio.portfolio.model.UserDto;
 import com.portfolio.portfolio.service.JwtUserDetailsService;
-import static org.hibernate.annotations.common.util.impl.LoggerFactory.logger;
-import static org.hibernate.internal.CoreLogging.logger;
-import static org.hibernate.internal.HEMLogging.logger;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -45,12 +43,12 @@ public class JwtAuthenticationController {
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
 
 		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-
+                
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 
 		final String token = jwtTokenUtil.generateToken(userDetails);
 
-		return ResponseEntity.ok(new JwtResponse(token));
+		return ResponseEntity.ok(new JwtResponse(token,userDetails.getAuthorities())); 
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
@@ -60,7 +58,7 @@ public class JwtAuthenticationController {
 
 	private void authenticate(String username, String password) throws Exception {
 		try {
-                    
+                   
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 		
                 } catch (DisabledException e) {
@@ -70,4 +68,13 @@ public class JwtAuthenticationController {
 		}
                 
 	}
+        
+        @RequestMapping (value = "/rol/info", method = RequestMethod.GET)
+        public List<?> userRoles ()
+        {        
+            
+            return userDetailsService.getRoles();
+        }
+        
+        
 }

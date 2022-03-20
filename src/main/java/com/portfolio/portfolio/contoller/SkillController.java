@@ -4,8 +4,8 @@
  */
 package com.portfolio.portfolio.contoller;
 
-import com.portfolio.portfolio.model.Project;
-import com.portfolio.portfolio.repository.ProjectRepository;
+import com.portfolio.portfolio.model.Skill;
+import com.portfolio.portfolio.service.SkillService;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,32 +25,33 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @CrossOrigin
-public class ProyectController {
-    @Autowired
-    private ProjectRepository projectRepository;
+public class SkillController {
     
-    @RequestMapping (value = "/project/list", method = RequestMethod.GET)
-    public List <Project> listEducation(){
-        return projectRepository.findAll();
+    @Autowired 
+    SkillService skillService; 
+    
+    @RequestMapping (value = "/skill/list", method = RequestMethod.GET)
+    public List <Skill> listEducation(){
+        return skillService.getSkills();
     }
     @PreAuthorize("hasRole('ADMIN')")
-    @RequestMapping (value = "/project/add", method = RequestMethod.POST)
-    public Project addProject (@RequestBody Project project)
+    @RequestMapping (value = "/skill/add", method = RequestMethod.POST)
+    public Skill addProject (@RequestBody Skill skill)
     {
-        return projectRepository.save(project);
+        return skillService.saveSkill(skill);
     }
     @PreAuthorize("hasRole('ADMIN')")
-    @RequestMapping (value = "/project/delete/{id}", method = RequestMethod.DELETE)
+    @RequestMapping (value = "/skill/delete/{id}", method = RequestMethod.DELETE)
     public ResponseEntity deleteProject (@PathVariable Long id){
         
-        Project p=null;
+        Skill p=null;
          try {
-            p=projectRepository.findById(id).get();
+            p=skillService.findById(id);
         } catch (NoSuchElementException e) {
             
             return new  ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-           projectRepository.delete(p);
+           skillService.skillDelete(p);
            return new  ResponseEntity<>(HttpStatus.OK);
     }
 }

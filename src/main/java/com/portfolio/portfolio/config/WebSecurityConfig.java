@@ -66,17 +66,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
                     .requiresSecure();
 		// We don't need CSRF for this example
-		/* httpSecurity.cors().and().csrf().disable()
+		 httpSecurity.cors().and().csrf().disable()
                         
 				// dont authenticate this particular request
-				.authorizeRequests().antMatchers("/login", "/register").permitAll().
+				//.authorizeRequests().antMatchers("/login", "/register").permitAll().
 				// all other requests need to be authenticated
-				anyRequest().authenticated().and().
+				//anyRequest().authenticated().and().
 				// make sure we use stateless session; session won't be used to
 				// store user's state.
 				exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                        ;*/
+                        ;
                         
                         
                         

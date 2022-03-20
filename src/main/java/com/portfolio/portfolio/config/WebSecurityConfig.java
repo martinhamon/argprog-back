@@ -61,11 +61,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
             
-            httpSecurity.requiresChannel()
+            httpSecurity
+                    .requiresChannel()
                     .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
-                            .requiresSecure();
+                    .requiresSecure();
 		// We don't need CSRF for this example
-		httpSecurity.cors().and().csrf().disable()
+		/* httpSecurity.cors().and().csrf().disable()
                         
 				// dont authenticate this particular request
 				.authorizeRequests().antMatchers("/login", "/register").permitAll().
@@ -75,7 +76,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				// store user's state.
 				exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                        ;
+                        ;*/
                         
                         
                         
